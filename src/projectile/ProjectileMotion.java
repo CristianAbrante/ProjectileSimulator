@@ -10,7 +10,7 @@ package projectile;
  */
 public class ProjectileMotion {
 
-  private final double GRAVITY_ACELERATION = 9.8;
+  public static final double GRAVITY_ACELERATION = 9.8;
   
   private double initialVelocity;
   private double initialAngle;
@@ -43,10 +43,11 @@ public class ProjectileMotion {
    */
   public void setInitialVelocity(double initialVelocity) 
       throws IllegalArgumentException {
-    if (initialVelocity >= 1.0) {
-      this.initialVelocity = initialVelocity;      
+    // initialValocity > 0.0
+    if (Double.compare(initialVelocity, 0.0) >= 0) {
+      this.initialVelocity = initialVelocity;            
     } else {
-      throw new IllegalArgumentException("initial velocity must be greater than zero");
+      throw new IllegalArgumentException("initial velocity must be greater than zero");      
     }
   }
 
@@ -63,7 +64,8 @@ public class ProjectileMotion {
    */
   public void setInitialAngle(double initialAngle) 
       throws IllegalArgumentException {
-    if (initialAngle > 0.0) {
+    // initialAngle > 0.0
+    if (Double.compare(initialAngle, 0.0) >= 0) {
       this.initialAngle = initialAngle;      
     } else {
       throw new IllegalArgumentException("initial angle must be greater than zero");
@@ -76,17 +78,15 @@ public class ProjectileMotion {
   public double getInitialHeight() {
     return initialHeight;
   }
-
-  /**
-   * @param initialHeight the initialHeight to set
-   */
+  
   /**
    * @param initialHeight the initial height to set
    * @throws IllegalArgumentException
    */
   public void setInitialHeight(double initialHeight) 
       throws IllegalArgumentException {
-    if (initialHeight >= 0.0) {
+    // initialHeight >= 0.0
+    if (Double.compare(initialHeight, 0.0) >= 0) {
       this.initialHeight = initialHeight;      
     } else {
       throw new IllegalArgumentException("initial height must be greater than zero");
@@ -106,9 +106,13 @@ public class ProjectileMotion {
    */
   public double getX(double second) 
       throws IllegalArgumentException {
-    if (second >= 0) {
-      if (second < getMaxXSecond()) {
-        return getInitialVelocity() * Math.cos(getInitialAngle()) * second;              
+    // second > 0;
+    if (Double.compare(second, 0.0) >= 0) {
+      // second <= getMaxXSecond()
+      if (Double.compare(second, getMaxXTime()) <= 0) {
+        return getInitialVelocity() 
+            * Math.cos(getInitialAngleRadians()) 
+            * second;              
       } else {
         return getMaxX();
       }
@@ -144,11 +148,13 @@ public class ProjectileMotion {
    * @throws IllegalArgumentException if the second is lower than zero
    */
   public double getY(double second) {
-    if (second >= 0) {
-      if (second < getMaxXSecond()) {
+    // second >= 0
+    if (Double.compare(second, 0.0) >= 0) {
+      // second <= getMaxXTime()
+      if (Double.compare(second, getMaxXTime()) <= 0) {
         return getInitialHeight() 
-            + getInitialVelocity() * Math.sin(getInitialAngle()) * second
-            + 0.5 * GRAVITY_ACELERATION * Math.pow(second, 2);              
+            + getInitialVelocity() * Math.sin(getInitialAngleRadians()) * second
+            - 0.5 * GRAVITY_ACELERATION * Math.pow(second, 2);              
       } else {
         return 0.0;
       }
@@ -184,9 +190,11 @@ public class ProjectileMotion {
    */
   public double getXVelocity(double second) 
       throws IllegalArgumentException {
-    if (second >= 0) {
-      if (second < getMaxXSecond()) {
-        return getInitialVelocity() * Math.cos(getInitialAngle());        
+    // second >= 0
+    if (Double.compare(second, 0.0) >= 0) {
+      // second < getMaxXTime()
+      if (Double.compare(second, getMaxXTime()) < 0) {
+        return getInitialVelocity() * Math.cos(getInitialAngleRadians());
       } else {
         return 0.0;
       }
@@ -206,13 +214,24 @@ public class ProjectileMotion {
    * @throws IllegalArgumentException
    */
   public double getYVelocity(double second) {
-    if (second >= 0) {
-      if (second < getMaxXSecond()) {
-        return getInitialVelocity() * Math.sin(getInitialAngle())
-            - GRAVITY_ACELERATION * second;        
+    // second >= 0
+    if (Double.compare(second, 0.0) >= 0) {
+      // second < getMaxXTime()
+      if (Double.compare(second, getMaxXTime()) < 0) {
+        return getInitialVelocity() 
+             * Math.sin(getInitialAngleRadians())
+             - GRAVITY_ACELERATION * second;        
       } else {
         return 0.0;
       }
+    } else {
+      throw new IllegalArgumentException("second must be greater than zero");
+    }
+  }
+  
+  public double getVelocity(double second) {
+    if (Double.compare(second, 0.0) >= 0) {
+      return Math.sqrt(Math.pow(getXVelocity(second), 2.0) + Math.pow(getYVelocity(second), 2.0));
     } else {
       throw new IllegalArgumentException("second must be greater than zero");
     }
@@ -226,7 +245,7 @@ public class ProjectileMotion {
    * @return the max y value in meters
    */
   public double getMaxY() {
-    return getY(getMaxYSecond());
+    return getY(getMaxYTime());
   }
   
   /**
@@ -237,25 +256,25 @@ public class ProjectileMotion {
    * @return the maximum x distance
    */
   public double getMaxX() {
-    return getX(getMaxXSecond());
+    return getX(getMaxXTime());
   }
   
   /**
    * @return the second where the max y is going
    *         to be reached
    */
-  public double getMaxYSecond() {
-    return (getInitialVelocity() * Math.sin(getInitialAngle())) / GRAVITY_ACELERATION;
+  public double getMaxYTime() {
+    return (getInitialVelocity() * Math.sin(getInitialAngleRadians())) / GRAVITY_ACELERATION;
   }
   
   /**
    * @return the second where the max x is going
    *         to be reached
    */
-  public double getMaxXSecond() {
-    double root = Math.pow(getInitialVelocity(), 2.0) * Math.pow(Math.sin(initialAngle), 2.0)
+  public double getMaxXTime() {
+    double root = Math.pow(getInitialVelocity(), 2) * Math.pow(Math.sin(getInitialAngleRadians()), 2)
                 + 2.0 *  GRAVITY_ACELERATION * getInitialHeight();
-    double firstTerm = -getInitialVelocity() * Math.sin(getInitialAngle());
+    double firstTerm = -getInitialVelocity() * Math.sin(getInitialAngleRadians());
     
     double firstSolution = (firstTerm + Math.sqrt(root)) / -GRAVITY_ACELERATION;
     double secondSolution = (firstTerm - Math.sqrt(root)) / -GRAVITY_ACELERATION;
@@ -263,20 +282,10 @@ public class ProjectileMotion {
   }
   
   /**
-   * Method that solves a quadratic
-   * equation and returns the bigger value.
-   * <p>
-   * ax^2 + bx + c = 0
-   * 
-   * @param a the x^2 coeficient
-   * @param b the x coefficient
-   * @param c the independent term
-   * @return the bigger solution after solving the equation
+   * @return the initial angle of the projectile 
+   *         in radians
    */
-  private double getMaxQuadraticSolution(double a, double b, double c) {
-    double root = Math.pow(b, 2) - 4 * a * c;
-    double firstSolution = (-b + Math.sqrt(root)) / (2 * a);
-    double secondSolution = (-b - Math.sqrt(root)) / (2 * a);
-    return Math.max(firstSolution, secondSolution);
+  private double getInitialAngleRadians() {
+    return Math.toRadians(getInitialAngle());
   }
 }
