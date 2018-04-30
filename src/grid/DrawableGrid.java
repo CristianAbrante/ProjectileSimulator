@@ -27,7 +27,6 @@ public class DrawableGrid {
   public static final int LABEL_PADDING = 25;
   private final int LINE_WIDTH = 4;
   private final Color GRID_COLOR = new Color(200, 200, 200, 200);
-  private final Stroke GRAPH_STROKE = new BasicStroke(2f);
   private final DecimalFormat formatter = new DecimalFormat("0.##");
   
   private Grid grid;
@@ -112,19 +111,34 @@ public class DrawableGrid {
     return getGrid().getSeparationPixelsY() * getNumberOfRows();
   }
   
+  public int getFirstXPosition() {
+    return PADDING + LABEL_PADDING;
+  }
+  
+  public int getLastXPosition() {
+    return getFirstXPosition() + getAxisWidth();
+  }
+  
+  public int getFirstYPosition() {
+    return PADDING;
+  }
+  
+  public int getLastYPosition() {
+    return getFirstYPosition() + getAxisHeight();
+  }
+  
   public void draw(Graphics g) {
     Graphics2D g2 = (Graphics2D) g;
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     
     // draw white background
     g2.setColor(Color.WHITE);
-    int margin = 2 * PADDING + LABEL_PADDING;
-    g2.fillRect(PADDING + LABEL_PADDING, PADDING, getWidth() - margin, getHeight() - margin);
+    g2.fillRect(getFirstXPosition(), getFirstYPosition(), getAxisWidth(), getAxisHeight());
     g2.setColor(Color.BLACK);
     
     for (int i = 0; i <= getNumberOfRows(); ++i) {
       // We draw the small lines on the left.
-      int x0 = PADDING + LABEL_PADDING;
+      int x0 = getFirstXPosition();
       int x1 = x0 + LINE_WIDTH;
       int y0 = PADDING + i * getGrid().getSeparationPixelsY();
       int y1 = y0;
@@ -132,7 +146,7 @@ public class DrawableGrid {
       
       // Draw grid line
       g2.setColor(GRID_COLOR);
-      g2.drawLine(PADDING + LABEL_PADDING + 1 + LINE_WIDTH, y0, getWidth() - PADDING, y1);
+      g2.drawLine(getFirstXPosition() + 1 + LINE_WIDTH, y0, getFirstXPosition() + getAxisWidth(), y1);
       g2.setColor(Color.BLACK);
       
       // Draw label
@@ -142,11 +156,11 @@ public class DrawableGrid {
       g2.drawString(yLabel, x0 - labelWidth - 5, y0 + (metrics.getHeight() / 2) - 3);
     }
     
-    g2.drawLine(PADDING + LABEL_PADDING, getAxisHeight() + PADDING, PADDING + LABEL_PADDING, PADDING);
+    g2.drawLine(getFirstXPosition(), getAxisHeight() + getFirstYPosition(), getFirstXPosition(), getFirstYPosition());
     
     for (int i = 1; i <= getNumberOfColumns(); ++i) {
       // We draw the small lines on the left.
-      int x0 = PADDING + LABEL_PADDING + i * getGrid().getSeparationPixelsX();
+      int x0 = getFirstXPosition() + i * getGrid().getSeparationPixelsX();
       int x1 = x0;
       int y0 = getAxisHeight() + PADDING;
       int y1 = y0 - LINE_WIDTH;
@@ -163,7 +177,7 @@ public class DrawableGrid {
       g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
     }
     
-    g2.drawLine(PADDING + LABEL_PADDING, getAxisHeight() + PADDING, getAxisWidth() + PADDING + LABEL_PADDING,  getAxisHeight() + PADDING);
+    g2.drawLine(getFirstXPosition(), getAxisHeight() + PADDING, getAxisWidth() + getFirstXPosition(),  getAxisHeight() + getFirstYPosition());
   }
   
   

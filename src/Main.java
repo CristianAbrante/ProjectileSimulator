@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 
 import grid.DrawableGrid;
 import grid.Grid;
+import projectile.ProjectileMotion;
+import view.DrawableProjectile;
 
 /**
  * 
@@ -22,18 +24,23 @@ import grid.Grid;
 public class Main extends JPanel {
   
   DrawableGrid grid;
+  DrawableProjectile projectile;
   
   public Main() {
+    ProjectileMotion p = new ProjectileMotion(50.0, 75.0, 50.0);
     Grid infoGrid = new Grid(DrawableGrid.PADDING + DrawableGrid.LABEL_PADDING,
-                    800 + DrawableGrid.PADDING,
-                    3.25, 12.0, 100, 100);
+                    8 * 50 + DrawableGrid.PADDING,
+                    50.0, 25.0, 
+                    100, 50);
     
     grid = new DrawableGrid(infoGrid, 6, 8);
+    projectile = new DrawableProjectile(p, grid);
   }
   
   @Override
   protected void paintComponent(Graphics g) {
     grid.draw(g);
+    projectile.draw(g);
   }
   
   /**

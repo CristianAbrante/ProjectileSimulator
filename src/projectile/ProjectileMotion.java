@@ -136,6 +136,10 @@ public class ProjectileMotion {
     return (int) (getX((double) (second)));
   }
   
+  public double getTime(double x) {
+    return x / (getInitialVelocity() * Math.cos(getInitialAngleRadians()));
+  }
+  
   /**
    * Method that return the y position of
    * the projectile at the specified instant 
