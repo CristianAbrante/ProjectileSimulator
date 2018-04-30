@@ -111,7 +111,7 @@ public class DrawableGrid {
     return getGrid().getSeparationPixelsY() * getNumberOfRows();
   }
   
-  public int getFirstXPosition() {
+  public static int getFirstXPosition() {
     return PADDING + LABEL_PADDING;
   }
   
@@ -119,7 +119,7 @@ public class DrawableGrid {
     return getFirstXPosition() + getAxisWidth();
   }
   
-  public int getFirstYPosition() {
+  public static int getFirstYPosition() {
     return PADDING;
   }
   

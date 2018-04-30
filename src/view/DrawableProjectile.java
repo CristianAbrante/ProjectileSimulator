@@ -147,7 +147,7 @@ public class DrawableProjectile {
       
       currentFrameX += 1;
       currentAxisX = getReferenceGrid().getGrid().getAxisX(currentFrameX);
-      System.out.println(String.format("xf: %d xa: %.4f t:%.4f", currentFrameX, currentAxisX, currentTime));
+      //System.out.println(String.format("xf: %d xa: %.4f t:%.4f", currentFrameX, currentAxisX, currentTime));
     }
     
     g2d.drawPolyline(getArray(xPositions), getArray(yPositions), xPositions.size());
