@@ -12,8 +12,6 @@ import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.text.DecimalFormat;
 
-import sun.font.GlyphLayout.LayoutEngineFactory;
-
 /**
  * <h2>DrawableGrid</h2>
  * 

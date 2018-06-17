@@ -9,8 +9,6 @@ import java.util.ArrayList;
 
 import javax.swing.Timer;
 
-import com.sun.prism.shader.DrawCircle_Color_AlphaTest_Loader;
-
 import grid.DrawableGrid;
 import grid.Grid;
 import projectile.ProjectileMotion;
